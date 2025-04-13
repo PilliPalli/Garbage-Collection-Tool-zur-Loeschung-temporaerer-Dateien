@@ -29,7 +29,7 @@ namespace Garbage_Collector.ViewModel
                 }
             }
         }
-       
+
         public Role SelectedRole
         {
             get => _selectedRole;
@@ -88,7 +88,7 @@ namespace Garbage_Collector.ViewModel
         {
             if (parameter is User user)
             {
-                string newPassword = "defaultPassword";  // Standardpasswort
+                string newPassword = "defaultPassword";  
                 user.PasswordHash = HashPassword(newPassword);
 
                 using (var context = new GarbageCollectorDbContext())
