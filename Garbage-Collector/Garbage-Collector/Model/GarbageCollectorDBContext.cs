@@ -25,8 +25,14 @@ public partial class GarbageCollectorDbContext : DbContext
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source = 192.168.178.111; Initial Catalog = GarbageCollectorDB; User Id = sa; Password=VeryStr0ngP@ssw0rd;Encrypt=False;");
-     
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            var config = AppConfig.LoadFromJson();
+            optionsBuilder.UseSqlServer(config.ConnectionString);
+        }
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CleanupLog>(entity =>
