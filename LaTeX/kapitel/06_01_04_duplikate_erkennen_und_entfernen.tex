@@ -1,0 +1,146 @@
+
+
+Eine weitere Funktion des Garbage-Collection-Tools ist die Erkennung und Beseitigung doppelter Dateien. In vielen Arbeitsverzeichnissen entstehen durch Kopiervorgänge, fehlerhafte Exporte oder wiederholte Downloads schnell Dateiduplikate, die unnötig Speicherplatz belegen.
+
+Die Bereinigung erfolgt über den Befehl \texttt{RemoveDuplicateFilesCommand}, der mit der Methode \texttt{RemoveDuplicateFilesAsync()} verknüpft ist. Nach Ausführung durchsucht die Methode die vom Benutzer gewählten Verzeichnisse und vergleicht Dateien anhand ihrer Inhalte.
+
+Hierzu wird für jede Datei ein Hashwert mittels MD5-Algorithmus berechnet. Dateien mit identischem Hash werden als Duplikate betrachtet. Von jeder identifizierten Duplikatengruppe bleibt nur eine Datei bestehen, alle weiteren werden gelöscht. Die freigegebenen Ressourcen werden dokumentiert.
+
+\begin{figure}[H]
+\centering
+\begin{minted}[
+  linenos,
+  firstnumber=1,
+  bgcolor=bg,
+  fontsize=\footnotesize,
+  frame=single,
+  numbersep=5pt,
+  breaklines=true,
+  tabsize=2
+]{csharp}
+private async Task RemoveDuplicateFilesAsync()
+{
+    if (!Directory.Exists(DirectoryPath))
+    {
+        StatusMessage = "Der angegebene Pfad existiert nicht.";
+        return;
+    }
+
+    var fileHashes = new Dictionary<string, List<string>>();
+    var filesToDelete = new List<string>();
+    double totalFreedSpace = 0;
+
+    var patterns = FilePatterns.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(p => p.Trim())
+                                .ToList();
+
+    await Task.Run(() =>
+    {
+        try
+        {
+            foreach (var pattern in patterns)
+            {
+                var files = GetFilesSafely(DirectoryPath, pattern);
+
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        string fileHash = ComputeFileHash(file);
+
+                        if (!fileHashes.ContainsKey(fileHash))
+                        {
+                            fileHashes[fileHash] = new List<string>();
+                        }
+                        fileHashes[fileHash].Add(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        StatusMessage = $"Fehler beim Verarbeiten von {file}: {ex.Message}";
+                    }
+                }
+            }
+\end{minted}
+\caption{Methode \texttt{RemoveDuplicateFilesAsync} – Teil 1: Hashing und Duplikaterkennung}
+\label{lst:removedupes1}
+\end{figure}
+\begin{figure}[H]
+\centering
+\begin{minted}[
+  linenos,
+  firstnumber=last,
+  bgcolor=bg,
+  fontsize=\footnotesize,
+  frame=single,
+  numbersep=5pt,
+  breaklines=true,
+  tabsize=2
+]{csharp}
+            foreach (var hash in fileHashes.Keys)
+            {
+                var duplicateFiles = fileHashes[hash];
+                if (duplicateFiles.Count > 1)
+                {
+                    for (int i = 1; i < duplicateFiles.Count; i++)
+                    {
+                        filesToDelete.Add(duplicateFiles[i]);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Fehler beim Durchsuchen des Verzeichnisses: {ex.Message}";
+        }
+    });
+
+    if (filesToDelete.Any())
+    {
+        long totalBytes = filesToDelete.Sum(f => new FileInfo(f).Length);
+        double spaceFreedInMb = totalBytes / (1024.0 * 1024.0);
+        await LogCleanupAsync(filesToDelete.Count, spaceFreedInMb, "Duplikate");
+        await DeleteFilesAsync(filesToDelete, "Löschen der Duplikate");
+    }
+    else
+    {
+        StatusMessage = "Keine Duplikate gefunden.";
+    }
+}
+\end{minted}
+\caption{Methode \texttt{RemoveDuplicateFilesAsync} – Teil 2: Duplikatlöschung und Abschluss}
+\label{lst:removedupes2}
+\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.95\textwidth]{src/cleanupvm_removedupes01.jpg}
+%     \includegraphics[width=0.95\textwidth]{src/cleanupvm_removedupes02.jpg}
+%     \caption{Screenshots der Methode \texttt{RemoveDuplicateFilesAsync} (Teil 1 und 2)}
+% \end{figure}
+
+
+Die Berechnung der Dateihashes erfolgt über die Methode \texttt{ComputeFileHash()}, welche den Inhalt einer Datei einliest und daraus einen eindeutigen MD5-Hash generiert. Dieses Verfahren ist effizient und ermöglicht eine sichere Duplikaterkennung auf Inhaltsebene – unabhängig von Dateinamen oder Speicherort.
+
+\begin{figure}[H]
+    \centering
+    \begin{cs}
+private string ComputeFileHash(string filePath)
+{
+    using (var md5 = MD5.Create())
+    {
+        using (var stream = File.OpenRead(filePath))
+        {
+            byte[] hash = md5.ComputeHash(stream);
+            return BitConverter.ToString(hash).Replace("-", "").ToLower();
+        }
+    }
+}
+\end{cs}
+    \caption{Screenshot der Methode \texttt{ComputeFileHash}}
+\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\textwidth]{src/cleanupvm_computefilehash_code.png}
+%     \caption{Screenshot der Methode \texttt{ComputeFileHash}}
+% \end{figure}
+
+Die Duplikaterkennung ist besonders nützlich in datenintensiven Umgebungen, in denen Benutzer versehentlich mehrfach identische Dateien erzeugen oder speichern. Durch die gezielte Beseitigung solcher Redundanzen wird nicht nur Speicherplatz eingespart, sondern auch die Übersichtlichkeit der Dateistruktur erhöht.

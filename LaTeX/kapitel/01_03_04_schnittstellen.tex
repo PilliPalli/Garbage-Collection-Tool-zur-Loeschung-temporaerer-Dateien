@@ -1,0 +1,5 @@
+Das Garbage-Collection-Tool kommuniziert mit einer extern betriebenen MSSQL-Server-Datenbank. Diese wird aktuell in einem Linux-basierten Docker-Container ausgeführt.
+
+Die Datenbank dient der Speicherung von Benutzerdaten, Konfigurationen sowie Protokollen über durchgeführte Bereinigungsvorgänge. Obwohl der Datenbankserver im Projektszenario lokal bereitgestellt wird, erfolgt die Anbindung netzwerkbasiert und kann daher als \textbf{externe Schnittstelle} bewertet werden.
+
+In einem produktiven Unternehmensumfeld wäre eine ähnliche Infrastruktur üblich: Die Anwendung würde auf einem Client laufen, während die SQL-Datenbank zentral auf einem Datenbankserver innerhalb des Firmennetzwerks betrieben wird. Die Kommunikation würde ebenfalls über das Netzwerk erfolgen.

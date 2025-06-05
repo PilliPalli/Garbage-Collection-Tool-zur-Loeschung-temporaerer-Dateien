@@ -1,0 +1,35 @@
+Beim Anmeldevorgang wird der in der Datenbank gespeicherte Hashwert geladen und mit dem eingegebenen Passwort verifiziert. Dafür wird aus dem gespeicherten Hash zunächst der ursprüngliche Salt extrahiert, der bei der Registrierung verwendet wurde. Anschließend wird das eingegebene Passwort mit diesem Salt erneut mittels Argon2 gehasht.
+Der Salt ist ein zufällig generierter Wert, meist in Form eines Byte-Arrays, der bei jedem Hashing-Vorgang neu erzeugt wird. Durch seine Einzigartigkeit wird sichergestellt, dass selbst identische Passwörter bei unterschiedlichen Benutzern zu unterschiedlichen Hashwerten führen. Stimmen der neu berechnete und der gespeicherte Hashwert überein, gilt das Passwort als korrekt, und der Benutzer wird erfolgreich authentifiziert.
+
+\begin{figure}[H]
+    \centering
+    \begin{cs}
+private static bool VerifyPassword(string password, string storedHash)
+{
+    byte[] hashBytes = Convert.FromBase64String(storedHash);
+    byte[] salt = new byte[16];
+    Array.Copy(hashBytes, 0, salt, 0, 16);
+
+    var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
+    {
+        Salt = salt,
+        DegreeOfParallelism = 8,
+        Iterations = 4,
+        MemorySize = 65536
+    };
+
+    byte[] hash = argon2.GetBytes(32);
+
+    for (int i = 0; i < 32; i++)
+    {
+        if (hash[i] != hashBytes[16 + i])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+\end{cs}
+    \caption{Passwortverifikation durch erneutes Hashing mit Argon2}
+\end{figure}

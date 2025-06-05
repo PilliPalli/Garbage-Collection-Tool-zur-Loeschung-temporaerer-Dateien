@@ -1,0 +1,42 @@
+Für die Speicherung von Benutzerdaten, Rollen, Protokollen sowie Konfigurationen wird eine relationale Datenbank auf Basis von \textbf{Microsoft SQL Server} eingesetzt. Die Anbindung erfolgt über \textbf{Entity Framework Core}, wodurch eine objektorientierte Kommunikation mit der Datenbank möglich ist. Die Datenbankmodelle – beispielsweise \texttt{User}, \texttt{CleanupLog} oder \texttt{Role} – sind als C\#-Klassen im Projekt umgesetzt und werden über einen zentralen \texttt{DbContext} verwaltet.
+
+\subsubsection*{Entwicklungsumgebung mit Docker}
+
+Während der Entwicklung kommt \textbf{Docker} zum Einsatz, um die Datenbank in einem isolierten Container bereitzustellen. Dies bietet mehrere Vorteile:
+
+\begin{itemize}
+    \item \textbf{Plattformunabhängigkeit:} Die Umgebung lässt sich auf jedem System mit Docker identisch starten.
+    \item \textbf{Reproduzierbarkeit:} Fehler durch unterschiedliche Systemkonfigurationen werden minimiert.
+    \item \textbf{Schnelles Setup:} Die gesamte Datenbank ist mit einem einzigen Befehl einsatzbereit.
+    \item \textbf{Isolierte Testumgebung:} Änderungen an der Datenbankstruktur können risikolos getestet werden.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{shellcode}
+sudo docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=VeryStr0ngP@ssw0rd" --name sql -p 1433:1433 -v sql_server:/var/opt/mssql -d --restart=always --hostname sql --platform linux/amd64 -d mcr.microsoft.com/mssql/server:2022-latest
+\end{shellcode}
+    \caption{Beispiel für einen \texttt{docker run}-Befehl zur Bereitstellung eines SQL-Servers}
+\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\textwidth]{src/docker_code.png}
+%     \caption{Beispiel für einen \texttt{docker run}-Befehl zur Bereitstellung eines SQL-Servers}
+% \end{figure}
+
+\subsubsection*{Praxisnähe durch serverseitige Architektur}
+
+Auch im Unternehmenskontext liegt die Datenbank typischerweise nicht auf dem Client, sondern auf einem zentralen Server innerhalb des Netzwerks. Durch diese Trennung von Anwendung und Datenhaltung:
+
+\begin{itemize}
+    \item wird die Datensicherheit erhöht,
+    \item ist eine zentrale Sicherung und Verwaltung möglich,
+    \item können mehrere Benutzer gleichzeitig auf die Daten zugreifen.
+\end{itemize}
+
+Der Einsatz von Docker bildet diese Struktur realitätsnah ab und erleichtert die spätere Überführung in eine produktive Infrastruktur.
+
+\subsubsection*{Connection-String-Konfiguration}
+Der Connection String zur Datenbank ist in einer \texttt{config.json}-Datei gespeichert. In realen Unternehmensszenarien würde dieser sensible Wert jedoch nicht für den Endnutzer sichtbar abgelegt, sondern zentral verwaltet.
+
+Für Demonstrationszwecke und zur Erleichterung der Konfiguration wurde in diesem Projekt bewusst auf die Lösung mittels \texttt{config.json} zurückgegriffen.

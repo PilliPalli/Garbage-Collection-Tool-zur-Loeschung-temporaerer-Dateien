@@ -1,0 +1,249 @@
+\documentclass[12pt,a4paper]{article}
+
+% Pakete
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{colortbl}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{inconsolata}
+\usepackage{hyperref}
+\usepackage{url}
+
+\definecolor{bg}{HTML}{FAFAFA}
+
+\newminted[cs]{csharp}{
+  linenos,
+  bgcolor=bg,
+  fontsize=\footnotesize,
+  numbersep=5pt,
+  frame=single,
+  framesep=5pt,
+  breaklines=true,
+  tabsize=2,
+  style=default,
+  baselinestretch=1.2
+}
+
+\newminted[jsoncode]{json}{
+  linenos,
+  bgcolor=bg,
+  fontsize=\footnotesize,
+  frame=single,
+  numbersep=5pt,
+  breaklines=true,
+  tabsize=2
+}
+
+\newminted[xamlcode]{xml}{
+  linenos,
+  bgcolor=bg,
+  fontsize=\footnotesize,
+  frame=single,
+  numbersep=5pt,
+  breaklines=true
+}
+
+\newminted[shellcode]{console}{
+  fontsize=\footnotesize,
+  bgcolor=bg,
+  frame=single,
+  breaklines=true,
+  breakanywhere=true
+}
+
+% Seitenlayout
+\geometry{a4paper, margin=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+% Dokument
+\begin{document}
+
+% Titelblatt
+\begin{titlepage}
+\centering
+\includegraphics[width=1\textwidth]{src/logo.png} \\[1.5cm]
+
+\vspace{1cm}
+
+{\LARGE \textbf{Hausarbeit}} \\
+\vspace{0.3cm}
+{\large im Bildungsgang \\ \glqq Staatlich geprüfte/r Wirtschaftsinformatiker/in\grqq} \\
+\vspace{0.2cm}
+{gemä\ss~\S{}5 der Ausbildungs- und Prüfungsordnung} \\
+\vspace{2cm}
+
+\fbox{\parbox{0.9\textwidth}{\centering
+\vspace{0.5em}
+\LARGE\textbf{Entwicklung eines Garbage-Collection-Tools zur Löschung temporärer Dateien} \\[0.5em]
+}}
+
+\vfill
+
+\begin{tabular}{rl}
+  vorgelegt von: & Moritz Nicola Kreis \\
+  Klasse: & WI23ZA1 \\
+  Adresse: & Blumenstraße 5 \\
+  Ort: & 66583 Spiesen-Elversberg \\
+  E-Mail: & moritz.nicola.kreis@web.de \\
+  Abgabetermin: & 15.05.2025 \\
+  Betreuer/in: & Herr Friedrich \\
+\end{tabular}
+
+\end{titlepage}
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% Inhaltsverzeichnis
+\tableofcontents
+\newpage
+
+\listoffigures
+\newpage
+
+%  Arabische Seitenzahlen ab dem Vorwort 
+\pagenumbering{arabic}
+\setcounter{page}{1}
+% Vorwort
+\section*{Vorwort}
+\input{kapitel/00_vorwort}
+
+% 1. Lasten- und Pflichtenheft
+\section{Lasten- und Pflichtenheft}
+\subsection{Einführung}
+\input{kapitel/01_01_einfuehrung}
+\subsection{Ist-Situation}
+\input{kapitel/01_02_ist_situation}
+\subsection{Soll-Situation}
+\subsubsection{Soll-Zustand}
+\input{kapitel/01_03_01_soll_zustand}
+\subsubsection{Funktionale Anforderungen}
+\input{kapitel/01_03_02_funktionale_anforderungen}
+\subsubsection{Nicht-funktionale Anforderungen}
+\input{kapitel/01_03_03_nichtfunktionale_anforderungen}
+\subsubsection{Schnittstellen}
+\input{kapitel/01_03_04_schnittstellen}
+\subsubsection{Risiken}
+\input{kapitel/01_03_05_risiken}
+\subsection{Abnahmekriterien}
+\input{kapitel/01_04_abnahmekriterien}
+\subsection{Use-Case-Diagramm und Use-Cases}
+\input{kapitel/01_05_use_cases}
+\subsection{Projektplan}
+\input{kapitel/01_06_projektplan}
+\subsection{Produktumgebung}
+\input{kapitel/01_07_produktumgebung}
+\subsection{Skizze des GUI}
+\input{kapitel/01_08_gui}
+\subsection{DB-Entwurf}
+\input{kapitel/01_09_db_entwurf}
+\subsection{Link zum Git-Repository}
+\input{kapitel/01_10_git}
+\subsection{Testplan}
+\input{kapitel/01_11_testplan}
+
+% 2. Benutzerhandbuch
+\section{Benutzerhandbuch}
+\subsection{Start und Anmeldung}
+\input{kapitel/02_01_start_anmeldung}
+
+\subsection{Einstellungen konfigurieren}
+\input{kapitel/02_02_einstellungen}
+
+
+\subsection{Bereinigungsfunktionen}
+\input{kapitel/02_03_bereinigung}
+
+
+\subsection{Administration}
+\input{kapitel/02_04_adminpanel}
+
+\subsection{Abmeldung und Beenden}
+\input{kapitel/02_05_abmeldung}
+
+
+% 3. Implementierung
+\section{Implementierung}
+\subsection{Architekturüberblick}
+\input{kapitel/03_01_architekturüberblick}
+
+\subsection{Datenbankanbindung und Docker}
+\input{kapitel/03_02_datenbankanbindung_und_docker}
+
+% 4. Tests
+\section{Tests}
+\input{kapitel/04_tests}
+
+% 5. Installationsanleitung
+\section{Installationsanleitung}
+\subsection{Systemvoraussetzungen}
+\input{kapitel/05_01_systemvorraussetungen}
+
+\subsection{Vorbereitung der Datenbank}
+\input{kapitel/05_02_vorbereitung_der_datenbank}
+
+\subsection{Konfiguration und Verbindung}
+\input{kapitel/05_03_konfiguration_und_verbindung}
+
+
+% 6. Quellcodebeschreibung
+\section{Quellcode}
+\subsection{Die Klasse \texttt{CleanupVM.cs} im Garbage-Collector}
+
+\subsubsection{Initialisierung}
+\input{kapitel/06_01_01_initialisierung}
+
+\subsubsection{Manuelle Bereinigung}
+\input{kapitel/06_01_02_manuelle_bereinigung}
+
+\subsubsection{Junk-Dateien erkennen und bereinigen}
+\input{kapitel/06_01_03_junk_dateien_erkennen_und_bereinigen}
+
+\subsubsection{Duplikate erkennen und entfernen}
+\input{kapitel/06_01_04_duplikate_erkennen_und_entfernen}
+
+
+\subsection{Authentifizierung und Registrierung}
+\input{kapitel/06_02_00_authentifizierung_und_registrierung}
+
+\subsubsection{Registrierungsvorgang}
+\input{kapitel/06_02_01_registrierungsvorgang}
+
+\subsubsection{Sicheres Passwort-Hashing}
+\input{kapitel/06_02_02_sicheres_passwort_hashing}
+
+\subsubsection{Anmeldevorgang}
+\input{kapitel/06_02_03_anmeldevorgang}
+
+\clearpage
+
+% 7. Ausblick und Fazit
+\section{Ausblick und Fazit}
+\input{kapitel/07_ausblick_und_fazit}
+
+% Quellen und Werkzeuge
+\input{kapitel/quellen_und_werkzeuge}
+
+% eidesstattliche Erklärung
+\input{kapitel/eidesstattliche_erklaerung}
+
+\end{document}

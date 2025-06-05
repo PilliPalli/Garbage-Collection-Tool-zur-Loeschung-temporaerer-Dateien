@@ -1,0 +1,126 @@
+
+
+\subsection*{Testfall GC01 – Automatische Datenbereinigung}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+ \textbf{ID:} & GC01 \\
+\hline
+\textbf{Beschreibung:} & Überprüfung der automatischen Datenbereinigung. \\
+\hline
+\textbf{Vorbedingung:} & Das Tool ist installiert, konfiguriert und der Bereinigungsprozess ist aktiviert. Es existieren alte und neue Dateien. \\
+\hline
+\textbf{Test-Schritte:} & 
+1. Es werden Testdateien in einem temporären Verzeichnis erstellt, einige davon sind älter als der angegebene Schwellenwert (z.\,B. 10 Tage). \newline
+2. Das Tool wird gestartet, und der Bereinigungsprozess ausgeführt. \newline
+3. Überprüfung, ob alte Dateien entfernt wurden und neue Dateien erhalten bleiben. \\
+\hline
+\textbf{Erwartetes \newline Resultat:} & 
+- Die alten Dateien werden erfolgreich entfernt. \newline
+- Die neuen Dateien bleiben bestehen. \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsection*{Testfall GC02 – Sicherheitsfunktion (Papierkorb)}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{ID:} & GC02 \\
+\hline
+\textbf{Beschreibung:} & Test der Sicherheitsfunktion, bei der Dateien in den Papierkorb verschoben werden. \\
+\hline
+\textbf{Vorbedingung:} & Das Tool ist installiert und konfiguriert, und die Option zum Verschieben von Dateien in den Papierkorb ist aktiviert. \\
+\hline
+\textbf{Test-Schritte:} & 
+1. Testdateien werden in einem temporären Verzeichnis erstellt. \newline
+2. Der Bereinigungsprozess wird gestartet, und überprüft, ob die Dateien in den Papierkorb verschoben werden. \newline
+3. Der Papierkorb wird auf die verschobenen Dateien überprüft. \\
+\hline
+\textbf{Erwartetes \newline Resultat:} & 
+- Die Dateien werden nicht gelöscht, sondern in den Papierkorb verschoben. \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsection*{Testfall GC03 – Benutzerdefinierte Einstellungen}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{ID:} & GC03 \\
+\hline
+\textbf{Beschreibung:} & Test der benutzerdefinierten Einstellungen. \\
+\hline
+\textbf{Vorbedingung:} & Das Tool ist installiert und konfiguriert, der Bereinigungsprozess ist aktiviert. \\
+\hline
+\textbf{Test-Schritte:} & 
+1. Zugriff auf die Einstellungsoptionen des Tools. \newline
+2. Anpassung der Parameter in der Konfigurationsdatei (z.B. Verzeichnis, Dateimuster, Alter der zu löschenden Dateien). \newline
+3. Ausführung des Bereinigungsprozesses und Überprüfung, ob die Änderungen korrekt umgesetzt wurden. \\
+\hline
+\textbf{Erwartetes \newline Resultat:} & 
+- Die neuen Einstellungen werden korrekt angewendet. \newline
+- Der Bereinigungsprozess arbeitet entsprechend den benutzerdefinierten Einstellungen. \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsection*{Testfall GC04 – Duplikatentfernung}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{ID:} & GC04 \\
+\hline
+\textbf{Beschreibung:} & Test der Duplikatentfernung. \\
+\hline
+\textbf{Vorbedingung:} & Doppelte Dateien befinden sich im Verzeichnis. \\
+\hline
+\textbf{Test-Schritte:} & 
+1. Erstellen von doppelten Dateien (gleicher Inhalt, unterschiedlicher Dateiname). \newline
+2. Start des Bereinigungsprozesses. \newline
+3. Überprüfung, ob die Duplikate entfernt werden und nur eine Datei bestehen bleibt. \\
+\hline
+\textbf{Erwartetes \newline Resultat:} & 
+- Nur eine Kopie jeder doppelten Datei bleibt bestehen. \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsection*{Testfall GC05 – Passwortänderung}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{ID:} & GC05 \\
+\hline
+\textbf{Beschreibung:} & Überprüfung der Passwortänderungsfunktion. \\
+\hline
+\textbf{Vorbedingung:} & Der Benutzer ist eingeloggt, und es gibt einen Testbenutzer mit einem bekannten Passwort. \\
+\hline
+\textbf{Test-Schritte:} & 
+1. Zugriff auf die Einstellungen, um das Passwort zu ändern. \newline
+2. Eingeben des aktuellen Passworts, gefolgt von einem neuen Passwort. \newline
+3. Überprüfen, ob die Passwortänderung korrekt durchgeführt wurde. \\
+\hline
+\textbf{Erwartetes \newline Resultat:} & 
+- Das Passwort wird erfolgreich geändert. \\
+\hline
+\end{tabular}
+
+
+\newpage
+\subsection{Unit Tests}
+Aktuell ist die Implementierung von Unit-Tests nicht geplant. Stattdessen wird der Fokus auf manuelle Tests gelegt, um sicherzustellen, dass die Schlüsselkomponenten des Tools wie erwartet funktionieren. Manuelle Tests werden für kritische Funktionen durchgeführt.
+
+Eine spätere Einführung von Unit-Tests bleibt optional, abhängig von den zukünftigen Anforderungen und der Projektentwicklung.
+
+\vspace{1em}
+\textbf{Begründung:}
+\begin{enumerate}
+    \item \textbf{Kein Verzicht auf Qualitätssicherung:} \\
+    Statt automatisierter Tests werden manuelle Tests für zentrale Funktionen priorisiert.
+    
+    \item \textbf{Flexibilität für die Zukunft:} \\
+    Die Möglichkeit zur Einführung von Unit-Tests bleibt offen, falls sich Anforderungen oder Ressourcen ändern.
+    
+    \item \textbf{Zeitmanagement:} \\
+    Fokus auf funktionierende Hauptfunktionen, anstatt zusätzliche Komplexität durch Tests hinzuzufügen.
+\end{enumerate}

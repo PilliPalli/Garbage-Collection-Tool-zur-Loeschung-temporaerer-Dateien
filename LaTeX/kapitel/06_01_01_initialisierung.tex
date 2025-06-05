@@ -1,0 +1,77 @@
+
+
+Die Klasse \texttt{CleanupVM} ist das zentrale \texttt{ViewModel} und das Herzstück des Programms. Sie fungiert als Vermittler zwischen der grafischen Benutzeroberfläche (View) und der Anwendungslogik (Model) und kapselt die gesamte Funktionalität rund um den Datei-Bereinigungsprozess. 
+
+\paragraph{Eigenschaften}
+Die Klasse stellt zahlreiche an die Oberfläche gebundene Eigenschaften bereit, unter anderem:
+
+\begin{itemize}
+  \item \texttt{DirectoryPath}: Der Pfad des Verzeichnisses, das bereinigt werden soll. Änderungen triggern \texttt{OnPropertyChanged}, um die UI zu aktualisieren.
+  \item \texttt{OlderThanDays}: Schwellenwert in Tagen für zu löschende Dateien.
+  \item \texttt{FilePatterns}: Liste mit Dateimustern (z.\,B. \texttt{*.tmp, *.log}) zur Filterung.
+  \item \texttt{IntervalInMinutes}: Intervall in Minuten für den automatisierten Bereinigungsscheduler.
+  \item \texttt{SchedulerStatus}, \texttt{TimeUntilNextCleanup}: Informationen zum aktuellen Scheduler-Status.
+  \item \texttt{StatusMessage}, \texttt{StatusColor}: Visualisierung von Status- und Fehlermeldungen.
+  \item \texttt{ProgressBarVisibility}, \texttt{ProgressValue}, \texttt{ProgressMaximum}: Steuerung der Fortschrittsanzeige.
+  \item \texttt{AreButtonsEnabled}: De-/Aktivierung von Schaltflächen bei laufenden Prozessen.
+\end{itemize}
+
+\paragraph{Befehle}
+Die folgenden \texttt{ICommand}-Befehle werden zur Interaktion mit der Oberfläche bereitgestellt:
+
+\begin{itemize}
+  \item \texttt{CleanupCommand}: Führt die Standard-Bereinigung aus.
+  \item \texttt{CleanJunkFilesCommand}, \texttt{RemoveDuplicateFilesCommand}: Löschen von temporären Dateien bzw. Duplikaten.
+  \item \texttt{StartSchedulerCommand}, \texttt{StopSchedulerCommand}: Steuerung des Schedulers.
+  \item \texttt{SearchDirectoryPathCommand}: Öffnet einen Dialog zur Verzeichnisauswahl.
+\end{itemize}
+
+\paragraph{Konstruktor}
+Im Konstruktor erfolgt die Initialisierung der zentralen Komponenten:
+
+\begin{itemize}
+  \item Laden der Konfiguration aus der \texttt{config.json}-Datei.
+  \item Initialisierung der Befehle (\texttt{RelayCommand}).
+  \item Einrichtung eines Countdowns für den nächsten automatischen Cleanup.
+  \item Laden bisheriger Protokolle.
+  \item Setzen von Startwerten für Statusanzeigen und Schaltflächen.
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{cs}
+public CleanupVM()
+{
+    _config = AppConfig.LoadFromJson("config.json");
+    CleanupCommand = new RelayCommand(async obj => await ExecuteWithButtonDisable(CleanupAsync));
+    CleanJunkFilesCommand = new RelayCommand(async obj => await ExecuteWithButtonDisable(CleanJunkFilesAsync));
+    RemoveDuplicateFilesCommand = new RelayCommand(async obj => await ExecuteWithButtonDisable(RemoveDuplicateFilesAsync));
+    StartSchedulerCommand = new RelayCommand(obj => StartScheduler());
+    StopSchedulerCommand = new RelayCommand(obj => StopScheduler());
+    SearchDirectoryPathCommand = new RelayCommand(obj => SearchDirectoryPath());
+    ProgressBarVisibility = Visibility.Collapsed;
+
+    _countdownTimer = new System.Timers.Timer(1000); 
+    _countdownTimer.Elapsed += CountdownElapsed;
+}
+\end{cs}
+    \caption{Screenshot des Konstruktors von CleanupVM}
+\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1.0\textwidth]{src/cleanupvm_kosntruktor_code.png}
+%     \caption{Screenshot des Konstruktors von \texttt{CleanupVM}}
+% \end{figure}
+
+\paragraph{Hilfsmethoden}
+Neben dem Konstruktor enthält die Klasse unterstützende Methoden wie zum Beispiel:
+
+\begin{itemize}
+  \item \texttt{OnPropertyChanged}: Aktualisiert die Oberfläche bei Änderungen.
+  \item \texttt{RestartTimer}: Startet den Timer neu, falls sich das Intervall ändert.
+  \item \texttt{SearchDirectoryPath}: Öffnet einen Systemdialog zur Verzeichnisauswahl.
+  \item \texttt{ExecuteWithButtonDisable}: Führt eine Methode aus und deaktiviert temporär die Schaltflächen.
+\end{itemize}
+
+Diese Initialisierungslogik sorgt dafür, dass die Bereinigungsfunktionen unmittelbar nach dem Laden der View voll einsatzbereit sind.

@@ -1,0 +1,87 @@
+
+Die im Kapitel \textbf{1.11 Testplan} dokumentierten Testfälle wurden manuell durchgeführt. In der folgenden Tabelle ist für jeden Testfall ein Protokoll mit den wichtigsten Informationen zur Durchführung festgehalten.
+
+Jeder Test wurde auf einem Windows-System mit Docker-gestützter Datenbankumgebung ausgeführt.
+
+\subsection*{Testprotokoll GC01 – Automatische Datenbereinigung}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test-ID:} & GC01 \\
+\hline
+\textbf{Datum:} & 19.04.2025 \\
+\hline
+\textbf{Tester:} & Moritz Nicola Kreis \\
+\hline
+\textbf{Beobachtetes \newline Resultat:} & Alte Testdateien wurden korrekt entfernt. Neue Dateien blieben erhalten. Keine unerwarteten Löschungen. \\
+\hline
+\textbf{Testergebnis:} & \textbf{Bestanden}. Ergebnis entspricht dem erwarteten Verhalten. \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsection*{Testprotokoll GC02 – Sicherheitsfunktion (Papierkorb)}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test-ID:} & GC02 \\
+\hline
+\textbf{Datum:} & 19.04.2025 \\
+\hline
+\textbf{Tester:} & Moritz Nicola Kreis \\
+\hline
+\textbf{Beobachtetes \newline Resultat:} & Dateien wurden wie konfiguriert in den Windows-Papierkorb verschoben. \\
+\hline
+\textbf{Testergebnis:} & \textbf{Bestanden}. Das Verhalten entspricht den Erwartungen. \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsection*{Testprotokoll GC03 – Benutzerdefinierte Einstellungen}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test-ID:} & GC03 \\
+\hline
+\textbf{Datum:} & 20.04.2025 \\
+\hline
+\textbf{Tester:} & Moritz Nicola Kreis \\
+\hline
+\textbf{Beobachtetes \newline Resultat:} & Einstellungen aus der \texttt{config.json} wurden korrekt übernommen und angewendet. \\
+\hline
+\textbf{Testergebnis:} & \textbf{Bestanden}. Der Bereinigungsprozess funktionierte wie konfiguriert. \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsection*{Testprotokoll GC04 – Duplikatentfernung}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test-ID:} & GC04 \\
+\hline
+\textbf{Datum:} & 20.04.2025 \\
+\hline
+\textbf{Tester:} & Moritz Nicola Kreis \\
+\hline
+\textbf{Beobachtetes \newline Resultat:} & Alle identischen Dateien (Inhalt) bis auf eine pro Gruppe wurden erfolgreich entfernt. \\
+\hline
+\textbf{Testergebnis:} & \textbf{Bestanden}. Keine unerwünschten Löschungen. \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsection*{Testprotokoll GC05 – Passwortänderung}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test-ID:} & GC05 \\
+\hline
+\textbf{Datum:} & 21.04.2025 \\
+\hline
+\textbf{Tester:} & Moritz Nicola Kreis \\
+\hline
+\textbf{Beobachtetes \newline Resultat:} & Passwort wurde korrekt geändert. Login mit neuem Passwort funktionierte. \\
+\hline
+\textbf{Testergebnis:} & \textbf{Bestanden}. Keine Abweichungen festgestellt. \\
+\hline
+\end{tabular}

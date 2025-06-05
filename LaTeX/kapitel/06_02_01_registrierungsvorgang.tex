@@ -1,0 +1,38 @@
+Die Klasse \texttt{RegisterVM} ermöglicht die Erstellung neuer Benutzerkonten. Die eingegebenen Daten werden validiert und in der Datenbank gespeichert. Zusätzlich erhält jeder neue Benutzer automatisch eine Rolle, entweder \texttt{User} oder bei bestimmten Bedingungen \texttt{Admin}.
+
+\vspace{0.5em}
+
+\begin{figure}[H]
+    \centering
+    \begin{cs}
+private void ExecuteRegister(object parameter)
+{
+    if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password)) { ... }
+
+    if (Password.Length < 8) { ... }
+
+    if (Password != ConfirmPassword) { ... }
+
+    using (var context = new GarbageCollectorDbContext())
+    {
+        if (context.Users.Any(u => u.Username == Username.ToLower())) { ... }
+
+        var newUser = new User
+        {
+            Username = Username,
+            PasswordHash = HashPassword(Password)
+        };
+
+        context.Users.Add(newUser);
+        ...
+    }
+
+    StatusMessage = "Registrierung erfolgreich";
+}
+\end{cs}
+    \caption{Auszug aus der Methode \texttt{ExecuteRegister}}
+\end{figure}
+
+\vspace{0.5em}
+
+In diesem Auszug wird deutlich, dass mehrere Schritte zur Validierung stattfinden (einige sind zur besseren Lesbarkeit gekürzt dargestellt). Unter anderem wird überprüft, ob bereits ein Benutzer mit demselben (normalisierten) Benutzernamen existiert. Die Normalisierung mittels \texttt{.ToLower()} stellt sicher, dass Groß- und Kleinschreibung ignoriert wird, so kann zum Beispiel ein Benutzername \texttt{Moritz} nicht doppelt unter Schreibweisen wie \texttt{moRITZ} registriert werden.

@@ -1,0 +1,29 @@
+Ein besonderer Fokus lag auf der sicheren Speicherung der Passwörter. Hier fiel die Wahl auf den modernen Algorithmus Argon2. Dieser nutzt gezielt CPU- und RAM-Ressourcen, um den Aufwand für Brute-Force-Angriffe zu erhöhen. Durch frei wählbare Parameter wie Speichergröße, Iterationen und Parallelisierung kann das Sicherheitsniveau flexibel angepasst werden. Die folgende Methode implementiert das Hashing mittels des NuGet-Pakets \texttt{Konscious.Security.Cryptography}:
+
+\begin{figure}[H]
+    \centering
+    \begin{cs}
+private static string HashPassword(string password)
+{  
+    byte[] salt = new byte[16];
+    RandomNumberGenerator.Fill(salt);
+
+    var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
+    {
+        Salt = salt,
+        DegreeOfParallelism = 8, 
+        Iterations = 4,       
+        MemorySize = 65536       
+    };
+
+    byte[] hash = argon2.GetBytes(32); 
+
+    byte[] hashBytes = new byte[48];
+    Array.Copy(salt, 0, hashBytes, 0, 16);
+    Array.Copy(hash, 0, hashBytes, 16, 32);
+
+    return Convert.ToBase64String(hashBytes); 
+}
+\end{cs}
+    \caption{Implementierung des Passwort-Hashings mit Argon2}
+\end{figure}

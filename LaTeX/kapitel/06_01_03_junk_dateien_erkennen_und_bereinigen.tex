@@ -1,0 +1,57 @@
+
+Zusätzlich zur Standard-Bereinigung bietet das Garbage-Collection-Tool die gezielte Entfernung sogenannter „Junk“-Dateien an. Dabei handelt es sich um temporäre Dateien mit bestimmten typischen Endungen wie \texttt{.tmp}, \texttt{.log}, \texttt{.bak}, \texttt{.old}, \texttt{.dmp} oder \texttt{.swp}. Solche Dateien sammeln sich häufig in systemweiten oder anwendungsspezifischen Verzeichnissen an und können Speicherressourcen unnötig blockieren.
+
+Die Bereinigungsfunktion wird durch den Befehl \texttt{CleanJunkFilesCommand} angestoßen, welcher in der Benutzeroberfläche über einen eigenen Button erreichbar ist. Intern ruft dieser Befehl die Methode \texttt{CleanJunkFilesAsync()} auf. Diese Methode lokalisiert Junk-Dateien im temporären Systemverzeichnis, berechnet die freigegebenen Ressourcen und löscht die Dateien, sofern sie nicht gesperrt sind.
+
+Im folgenden Screenshot ist die zentrale Logik zur Erkennung und Löschung dieser Dateien dargestellt:
+
+\begin{figure}[H]
+    \centering
+    \begin{cs}
+private async Task CleanJunkFilesAsync()
+{
+    string tempPath = Path.GetTempPath();
+    var junkFiles = Directory.GetFiles(tempPath, "*.*", System.IO.SearchOption.AllDirectories)
+                                .Where(f => IsJunkFile(f))
+                                .ToList();
+
+    if (!junkFiles.Any())
+    {
+        StatusMessage = "Keine Junk-Dateien gefunden.";
+        return;
+    }
+
+    long totalBytes = junkFiles.Sum(f => new FileInfo(f).Length);
+    double spaceFreedInMb = totalBytes / (1024.0 * 1024.0);
+    await LogCleanupAsync(junkFiles.Count, spaceFreedInMb, "Junk");
+    await DeleteFilesAsync(junkFiles, "Löschen der Junk-Dateien");
+}
+\end{cs}
+    \caption{Screenshot der Methode \texttt{CleanJunkFilesAsync}}
+\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\textwidth]{src/cleanupvm_cleanjunkfileasync_code.png}
+%     \caption{Screenshot der Methode \texttt{CleanJunkFilesAsync}}
+% \end{figure}
+
+Die Erkennung basiert auf einer Hilfsmethode namens \texttt{IsJunkFile()}, die eine Liste typischer Junk-Endungen prüft und bei Übereinstimmung einen \texttt{true}-Wert zurückliefert. Diese Funktion stellt sicher, dass nur wirklich überflüssige Dateien bereinigt werden. Die folgende Abbildung zeigt die Umsetzung dieser Methode:
+
+\begin{figure}[H]
+    \centering
+    \begin{cs}
+private bool IsJunkFile(string filePath)
+{
+    string[] junkExtensions = { ".tmp", ".log", ".bak", ".old", ".dmp", ".swp" };
+    return junkExtensions.Contains(Path.GetExtension(filePath).ToLower());
+}
+\end{cs}
+    \caption{Screenshot der Methode \texttt{IsJunkFile}}
+\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\textwidth]{src/cleanupvm_isjunkfile_code.png}
+%     \caption{Screenshot der Methode \texttt{IsJunkFile}}
+% \end{figure}
+
+Die gezielte Junk-Bereinigung stellt eine wichtige Ergänzung zur klassischen Zeit-basierten Löschung dar. Sie ermöglicht eine zusätzliche Entlastung des Systems und sorgt für eine effizientere Verwaltung temporärer Ressourcen.

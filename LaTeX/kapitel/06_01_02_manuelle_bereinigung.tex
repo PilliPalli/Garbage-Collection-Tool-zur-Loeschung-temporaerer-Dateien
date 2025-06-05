@@ -1,0 +1,56 @@
+
+
+Die manuelle Bereinigung ist eine zentrale Funktion des Garbage-Collection-Tools. Sie wird durch den Befehl \texttt{CleanupCommand} ausgelöst, welcher beim Klick auf den „CleanUp“-Button in der Oberfläche aktiviert wird. Der zugehörige Delegat ruft die Methode \texttt{CleanupAsync()} auf, eingebettet in den Wrapper \texttt{ExecuteWithButtonDisable()}, um Mehrfachaktionen zu verhindern.
+
+\paragraph{Ablauf}
+Die Methode \texttt{CleanupAsync()} prüft zunächst, ob das angegebene Verzeichnis existiert. Anschließend werden alle Dateien geladen, die älter als ein definierter Schwellenwert sind und dem Dateimuster entsprechen. Die Methode berechnet den freigegebenen Speicherplatz und erstellt anschließend einen Protokolleintrag. Die Dateien werden dann in \texttt{DeleteFilesAsync()} gelöscht.
+
+Während des Vorgangs wird eine Fortschrittsanzeige aktualisiert und Statusmeldungen informieren den Benutzer über den Bearbeitungsstand.
+
+\begin{figure}[H]
+    \centering
+    \begin{cs}
+public async Task CleanupAsync()
+{
+    if (!Directory.Exists(DirectoryPath))
+    {
+        StatusMessage = "Der angegebene Pfad existiert nicht.";
+        return;
+    }
+
+    var deletionThreshold = DateTime.Now.AddDays(-OlderThanDays);
+        
+    var filesToDelete = await Task.Run(() => GetFilesToProcess()
+        .Where(file => File.GetLastWriteTime(file) < deletionThreshold)
+        .ToList());
+
+    if (!filesToDelete.Any())
+    {
+        StatusMessage = "Keine Dateien zum Löschen gefunden.";
+        return;
+    }
+
+    long totalBytes = filesToDelete.Sum(f => new FileInfo(f).Length);
+    double spaceFreedInMb = totalBytes / (1024.0 * 1024.0);
+    await LogCleanupAsync(filesToDelete.Count, spaceFreedInMb, "Standard");
+    await DeleteFilesAsync(filesToDelete, "Löschvorgang");
+}
+\end{cs}
+    \caption{Screenshot der Methode \texttt{CleanupAsync}}
+\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\textwidth]{src/cleanupvm_cleanupasync_code.png}
+%     \caption{Screenshot der Methode \texttt{CleanupAsync}}
+
+% \end{figure}
+
+\paragraph{Wichtige Details}
+\begin{itemize}
+  \item \texttt{CleanupCommand} ist mit der Methode \texttt{CleanupAsync()} verknüpft, die asynchron arbeitet.
+  \item Über \texttt{GetFilesToProcess()} werden nur Dateien selektiert, die das Alter und Muster erfüllen.
+  \item Die Methode \texttt{DeleteFilesAsync()} übernimmt das Löschen unter Berücksichtigung von Sperrungen.
+  \item Ein Protokoll mit Dateizahl und freigegebenem Speicher wird über \texttt{LogCleanupAsync()} erfasst.
+\end{itemize}
+
+Die Methode \texttt{CleanupAsync()} stellt somit die zentrale Logik zur klassischen, manuellen Bereinigung dar.

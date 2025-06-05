@@ -1,0 +1,17 @@
+Für das Garbage-Collection-Tool bei DataFlow Solutions ergeben sich auf Grundlage der Implementierung die folgenden funktionalen Anforderungen sowie deren geschätzte Entwicklungszeiten:
+
+\begin{itemize}
+  \item \textbf{Verzeichnisauswahl und Musterfilterung:} Benutzer können ein Zielverzeichnis angeben und definieren, nach welchen Dateitypen (z.\,B. \texttt{.tmp}, \texttt{.log}) gesucht werden soll. \textit{(20 Stunden)}
+
+  \item \textbf{Erkennung veralteter Dateien:} Dateien werden anhand ihres Änderungsdatums mit einem einstellbaren Schwellenwert (z.\,B. älter als 10 Tage) gefiltert. \textit{(10 Stunden)}
+
+  \item \textbf{Automatische und manuelle Bereinigung:} Neben dem manuellen Start des Prozesses wird auch ein zeitgesteuerter, wiederkehrender Cleanup mittels Scheduler unterstützt. \textit{(25 Stunden)}
+
+  \item \textbf{Papierkorb statt Direktlöschung:} Gefundene Dateien können zunächst, je nach Einstellung, in den Papierkorb verschoben werden, um versehentliche Datenverluste zu vermeiden. \textit{(15 Stunden)}
+
+  \item \textbf{Einstellungen über Konfigurationsdatei:} Alle Parameter wie Pfad, Dateialter, Dateitypen werden über eine Konfigurationsdatei verwaltet. \textit{(35 Stunden)}
+
+  \item \textbf{Fortschrittsanzeige und Statusfeedback:} Der Benutzer erhält visuelles Feedback über den Status des Prozesses, inklusive Fortschrittsanzeige. \textit{(20 Stunden)}
+
+  \item \textbf{Logik für Doppelte Dateien:} Es ist eine Erweiterung geplant, um identische Dateien anhand von Hashwerten zu erkennen und als Duplikate zu behandeln. \textit{(30 Stunden)}
+\end{itemize}
